@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 #include "SimulationEngine.h"
 #include "FileManager.h"
@@ -6,12 +7,27 @@
 
 using namespace std;
 
-int main()
+int main(int argc, char* argv[])
 {
     SimulationEngine simulation;
     FileManager fileManager;
 
-    if (!fileManager.LoadInput("sample3.txt", &simulation))
+    string inputFile;
+    string outputFile = "output.txt";
+
+    if (argc > 1)
+    {
+        inputFile = argv[1];
+        if (argc > 2)
+            outputFile = argv[2];
+    }
+    else
+    {
+        cout << "Enter input file name (e.g. sample1.txt): ";
+        cin >> inputFile;
+    }
+
+    if (!fileManager.LoadInput(inputFile, &simulation))
     {
         cout << "Failed to load input file." << endl;
         return -1;
@@ -50,8 +66,7 @@ int main()
         return -1;
     }
 
-    
-    fileManager.SaveOutput("output.txt", &simulation);
+    fileManager.SaveOutput(outputFile, &simulation);
 
     cout << "Output file generated successfully." << endl;
 
