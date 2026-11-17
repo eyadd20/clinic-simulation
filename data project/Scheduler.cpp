@@ -87,15 +87,13 @@ void schedular::promoteToUrgent(int id) {
 	}
 }
 
-bool schedular::removePatient(int id) {
+Patient* schedular::extractPatient(PriorityQueue<Patient*>& q, int id) {
 	PriorityQueue<Patient*> temp;
-	bool found = false;
 	Patient* target = nullptr;
-	while (!regularQueue.empty()) {
-		Patient* p = regularQueue.top();
-		regularQueue.pop();
+	while (!q.empty()) {
+		Patient* p = q.top();
+		q.pop();
 		if (p->getId() == id) {
-			found = true;
 			target = p;
 		}
 		else {
@@ -103,15 +101,23 @@ bool schedular::removePatient(int id) {
 		}
 	}
 	while (!temp.empty()) {
-		regularQueue.push(temp.top());
+		q.push(temp.top());
 		temp.pop();
 	}
-	if (target != nullptr) {
-		delete target;
-	}
-	return found;
+	return target;
 }
 
+bool schedular::removePatient(int id) {
+	Patient* target = extractPatient(regularQueue, id);
+	if (target == nullptr) {
+		target = extractPatient(emergencyQueue, id);
+	}
+	if (target == nullptr) {
+		return false;
+	}
+	delete target;
+	return true;
+}
 bool schedular::isSimulationDone() {
 	if (!emergencyQueue.empty() || !regularQueue.empty()) {
 		return false;

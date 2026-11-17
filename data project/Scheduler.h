@@ -28,6 +28,7 @@ public:
 	Patient* getHighestPriorityPatient(PriorityQueue<Patient*>& q, int branch);
 	void promoteToUrgent(int id);
 	bool removePatient(int id);
+	Patient* extractPatient(PriorityQueue<Patient*>& q, int id);
 	bool isSimulationDone();
 	int getDoctorCount() const;
 	doctor* getDoctor(int index) const;
